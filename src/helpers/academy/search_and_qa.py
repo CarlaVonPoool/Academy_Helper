@@ -103,6 +103,18 @@ ANTWORTSTRUKTUR:
 3. Alle relevanten Details aus ALLEN Dokumenten
 4. Übersichtliche Struktur mit Überschriften
 
+FORMATIERUNG VON UI-ELEMENTEN:
+- Alle klickbaren Buttons, Menüs und Auswahlfelder in Backticks setzen: `Button Name`
+- Navigationspfade mit Pfeilen: `Buchhaltung` → `Ausgangsrechnung` → `Wiederkehrende`
+- Eingabefelder und Optionen: `"Monatlich"` oder `"Jährlich"`
+- Wichtige UI-Elemente: **`Speichern`** (fett + Backticks)
+
+BEISPIELE:
+- "Klicken Sie auf `+ Kontakt`"
+- "Wählen Sie `"Monatlich"` aus"
+- "Navigieren Sie zu `CRM` → `Adressbuch` → `Neuer Kontakt`"
+- "Betätigen Sie die Schaltfläche **`Rechnung erstellen`**"
+
 QUELLENANGABE:
 Füge am Ende hinzu:
 "## Quellen
