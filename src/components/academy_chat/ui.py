@@ -96,7 +96,7 @@ def show_sidebar_controls():
 def show_example_questions():
     """Zeigt Beispiel-Fragen als Buttons."""
     if not st.session_state.messages:
-        st.markdown("### Starte mit einer dieser Fragen:")
+        st.markdown("### Beispielfragen oder unten eigene Frage eintippen:")
         example_questions = [
             "Wie erstelle ich eine Ausgangsrechnung?",
             "Wie erstelle ich eine Rechnung?"

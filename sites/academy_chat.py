@@ -122,10 +122,59 @@ auto_load_cache_if_available()
 
 # Page title
 st.title("📚 Academy Chat")
-st.markdown("Intelligenter Assistent für alle Fragen rund um Poool Academy Inhalte")
+st.markdown("Academy Helper - unterstützt dich bei Fragen zur Poool Software basierend auf der Poool Academy. Aktuell noch in der Beta-Version und ggf. fehleranfällig")
 
-# Show sidebar controls
-show_sidebar_controls()
+# Status Indicator und Controls im Main Chat
+col_status, col_action = st.columns([3, 1])
+
+with col_status:
+    if st.session_state.document_store:
+        st.success("✅ Dateien sind indexiert - Du kannst Fragen stellen!", icon="✅")
+    else:
+        st.warning("❌ Dateien sind noch nicht indexiert - Bitte auf das X klicken um zu indexieren", icon="❌")
+
+with col_action:
+    if st.session_state.document_store:
+        st.markdown("<div style='text-align: center; font-size: 24px; color: green;'>✅</div>", unsafe_allow_html=True)
+    else:
+        if st.button("❌", help="Klicken um Academy-Inhalte zu indexieren", key="index_btn"):
+            local_docs_path = "./documents"
+            if os.path.exists(local_docs_path):
+                docs_dir = os.environ.get("DOCS_DIR", local_docs_path)
+            else:
+                docs_dir = os.environ.get("DOCS_DIR", "./documents")
+                
+            if docs_dir and os.path.exists(docs_dir):
+                from src.helpers.academy.document_processing import load_embeddings_cache, load_markdown_files, create_embeddings, save_embeddings_cache
+                
+                with st.spinner("Indexiere Academy-Inhalte..."):
+                    try:
+                        # Prüfe zuerst Cache
+                        cached_docs, cached_embeddings = load_embeddings_cache(docs_dir, force_check=True)
+                        
+                        if cached_docs and cached_embeddings:
+                            st.session_state.document_store = cached_docs
+                            st.session_state.embeddings = cached_embeddings
+                        else:
+                            # Lade und erstelle neue Embeddings
+                            documents = load_markdown_files(docs_dir)
+                            if documents:
+                                embeddings = create_embeddings(documents)
+                                save_embeddings_cache(documents, embeddings, docs_dir)
+                                st.session_state.document_store = documents
+                                st.session_state.embeddings = embeddings
+                            else:
+                                st.error("❌ Keine Academy-Dokumente gefunden!")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"❌ Fehler beim Indexieren: {e}")
+            else:
+                st.error("❌ Academy-Dokumente nicht verfügbar!")
+
+st.markdown("---")
+
+# Show sidebar controls (now hidden/minimized)
+# show_sidebar_controls()
 
 # Show example questions if no messages yet
 show_example_questions()
